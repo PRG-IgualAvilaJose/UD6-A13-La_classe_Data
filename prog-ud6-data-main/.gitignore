@@ -1,0 +1,13 @@
+target
+.idea
+# Ignorar directorio con archivos de configuración del propio IDE
+nbproject/private/
+
+# Ignorar directorio con archivos bytecode del proyecto
+build/
+
+# Ignorar configuración de módulos del IDE
+build.xml
+
+# Ignorar directorio con archivos bytecode de proyectos Maven
+target/
