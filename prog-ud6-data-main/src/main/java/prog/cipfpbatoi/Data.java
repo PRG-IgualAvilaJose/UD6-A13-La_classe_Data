@@ -115,7 +115,7 @@ public class Data {
      * Muestra por pantalla la fecha en formato español dd-mm-yyyy
      */
     public void mostrarEnFormatES() {
-        System.out.println(dia + "-" + mes + "-" + any);
+        System.out.printf("%02d%n-%02d%n-%04d%n",dia,mes,any);
     }
 
     /**
@@ -140,11 +140,7 @@ public class Data {
      * @return boolean
      */
     public boolean isIgual(Data otraFecha) {
-        if (otraFecha.isIgual(clone())) {
-            return true;
-        } else {
-            return false;
-        }
+        return otraFecha.isIgual(clone());
     }
 
     /**
@@ -160,7 +156,12 @@ public class Data {
        String text = "";
        
        diaActual = diesOrigen % 7;
-       text = DIES_TEXT[diaActual];
+       if(diaActual < 6 && diaActual > 0){
+           text = DIES_TEXT[diaActual + 1];
+       }else {
+           text = DIES_TEXT[0];
+       }
+
  
         return text;
     }
@@ -173,8 +174,7 @@ public class Data {
      * @return boolean
      */
     public boolean isFestiu() {
-        
-        return false;
+        return getDiaSetmana().equals(DIES_TEXT[0]) || getDiaSetmana().equals(DIES_TEXT[6]);
     }
 
     /**
@@ -188,7 +188,18 @@ public class Data {
      * @return int dia semana
      */
     public int getNumeroSetmana() {
-        return 0;
+        int diesAny = getDiesTranscorregutsEnAny();
+        int diaSemana = getDiesTranscorregutsEnAny() % 7;
+        int diesDilluns = 1 - diaSemana;
+        int diesDiumenge = 7 - diaSemana;
+
+        if (diesDilluns == 1 || diesDiumenge == 7) {
+            return 1; // Primer semana
+        } else if (diesDilluns > 1) {
+            return 1 + diesAny / 7; // Semanas completas + 1
+        } else {
+            return 1 + (diesAny + diesDiumenge) / 7; // Semanas completas + 1
+        }
     }
 
     /**
@@ -328,14 +339,7 @@ public class Data {
      * @return boolean
      */
     public static boolean isBisiesto(int anyo) {
-        if (anyo % 4 == 0 && anyo % 100 == 0 && anyo % 400 == 0) {
-            return true;
-        }
-        if (anyo % 4 == 0 && anyo % 100 != 0) {
-            return true;
-        }
-        return false;
-
+        return anyo % 4 == 0 && (anyo % 100 != 0 || anyo % 400 == 0);
     }
 
     /**
@@ -347,7 +351,7 @@ public class Data {
     public static int getDiesMes(int mes, int anyo) {
         int dias = 0;
 
-        if (isBisiesto(anyo - 1) == true) {
+        if (isBisiesto(anyo - 1)) {
             if (mes == 2) {
                 dias = 29;
             }
@@ -387,7 +391,7 @@ public class Data {
      * @return int total dias anyo en pasado
      */
     public static int getDiesAny(int anyo) {
-        if (isBisiesto(anyo - 1) == true) {
+        if (isBisiesto(anyo - 1)) {
             return 366;
         }
         return 365;
