@@ -161,8 +161,6 @@ public class Data {
        }else {
            text = DIES_TEXT[0];
        }
-
- 
         return text;
     }
 
@@ -213,7 +211,40 @@ public class Data {
      * @return boolean
      */
     public Data afegir(int numDias) {
-        return null;
+        if (numDias < 0 || numDias > 30) {
+            System.out.println("El número de días debe estar entre 0 y 30");
+            
+    }
+
+    int diasMesActual = getDiesMes(mes, any);
+    int diasRestantes = diasMesActual - dia;
+    int diasRestantesDespues = diasRestantes - numDias;
+
+    if (diasRestantesDespues >= 0) {
+        // Caso en el mismo mes
+        return new Data(dia + numDias, mes, any);
+    } else {
+        // Caso en el siguiente mes
+        int diasFaltantesSiguienteMes = numDias - diasRestantes;
+        int nuevoMes = mes + 1;
+        int nuevoAnyo = any;
+
+        if (nuevoMes > 12) {
+            nuevoMes = 1;
+            nuevoAnyo++;
+        }
+
+        while (diasFaltantesSiguienteMes > getDiesMes(nuevoMes, nuevoAnyo)) {
+            diasFaltantesSiguienteMes -= getDiesMes(nuevoMes, nuevoAnyo);
+            nuevoMes++;
+            if (nuevoMes > 12) {
+                nuevoMes = 1;
+                nuevoAnyo++;
+            }
+        }
+
+        return new Data(diasFaltantesSiguienteMes, nuevoMes, nuevoAnyo);
+    }
     }
 
     /**
@@ -227,7 +258,37 @@ public class Data {
      * @return boolean
      */
     public Data restar(int numDias) {
-        return null;
+          if (numDias < 0 || numDias > 30) {
+        throw new IllegalArgumentException("El número de días debe estar entre 0 y 30");
+    }
+
+    if (numDias <= dia) {
+        // Caso en el mismo mes
+        return new Data(dia - numDias, mes, any);
+    } else {
+        // Caso en el mes anterior
+        int diasFaltantesMesAnterior = numDias - dia;
+        int nuevoMes = mes - 1;
+        int nuevoAnyo = any;
+
+        if (nuevoMes < 1) {
+            nuevoMes = 12;
+            nuevoAnyo--;
+        }
+
+        while (diasFaltantesMesAnterior > getDiesMes(nuevoMes, nuevoAnyo)) {
+            diasFaltantesMesAnterior -= getDiesMes(nuevoMes, nuevoAnyo);
+            nuevoMes--;
+            if (nuevoMes < 1) {
+                nuevoMes = 12;
+                nuevoAnyo--;
+            }
+        }
+
+        int nuevoDia = getDiesMes(nuevoMes, nuevoAnyo) - diasFaltantesMesAnterior + 1;
+
+        return new Data(nuevoDia, nuevoMes, nuevoAnyo);
+    }
     }
 
     /**
@@ -239,7 +300,7 @@ public class Data {
      * @return
      */
     public boolean isCorrecta() {
-        return false;
+            return any > 0 && mes >= 1 && mes <= 12 && dia >= 1 && dia <= getDiesMes(mes, any);
     }
 
     /**
@@ -248,47 +309,7 @@ public class Data {
      * @return char
      */
     private String getMesEnFormatText() {
-        String mesTexto = "";
-
-        switch (mes) {
-            case 1:
-                mesTexto = MESOS_TEXT[0];
-                break;
-            case 2:
-                mesTexto = MESOS_TEXT[1];
-                break;
-            case 3:
-                mesTexto = MESOS_TEXT[2];
-                break;
-            case 4:
-                mesTexto = MESOS_TEXT[3];
-                break;
-            case 5:
-                mesTexto = MESOS_TEXT[4];
-                break;
-            case 6:
-                mesTexto = MESOS_TEXT[5];
-                break;
-            case 7:
-                mesTexto = MESOS_TEXT[6];
-                break;
-            case 8:
-                mesTexto = MESOS_TEXT[7];
-                break;
-            case 9:
-                mesTexto = MESOS_TEXT[8];
-                break;
-            case 10:
-                mesTexto = MESOS_TEXT[9];
-                break;
-            case 11:
-                mesTexto = MESOS_TEXT[10];
-                break;
-            case 12:
-                mesTexto = MESOS_TEXT[11];
-                break;
-            default:
-        }
+        String mesTexto = MESOS_TEXT[mes-1];
         return mesTexto;
     }
 
@@ -395,5 +416,5 @@ public class Data {
             return 366;
         }
         return 365;
-    }
+    }   
 }
