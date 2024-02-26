@@ -115,7 +115,7 @@ public class Data {
      * Muestra por pantalla la fecha en formato español dd-mm-yyyy
      */
     public void mostrarEnFormatES() {
-        System.out.printf("%02d%n-%02d%n-%04d%n",dia,mes,any);
+        System.out.println(dia + "-" + mes + "-" + any);
     }
 
     /**
@@ -140,8 +140,8 @@ public class Data {
      * @return boolean
      */
     public boolean isIgual(Data otraFecha) {
-        return otraFecha.isIgual(clone());
-    }
+        return dia == otraFecha.dia && mes == otraFecha.mes && any == otraFecha.any;
+}
 
     /**
      * Retorna un String que representa el dia de la setmana en format text
